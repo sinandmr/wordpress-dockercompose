@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  veritabani:
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - verilerim:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: sdmr
+      MYSQL_DATABASE: wp_deneme
+      MYSQL_USER: sdmr
+      MYSQL_PASSWORD: 123
+    networks:
+      - wpnet
+
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - veritabani
+    restart: always
+    ports:
+      - '80:80'
+    environment:
+      WORDPRESS_DB_HOST: veritabani:3306
+      WORDPRESS_DB_USER: sdmr
+      WORDPRESS_DB_PASSWORD: 123
+      WORDPRESS_DB_NAME: wp_deneme
+    networks:
+      - wpnet
+
+volumes:
+  verilerim:
+
+networks:
+  wpnet:
+    driver: bridge
